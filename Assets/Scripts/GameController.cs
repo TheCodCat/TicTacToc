@@ -1,12 +1,16 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
     [SerializeField] private VariblController _controller;
-    [SerializeField] private List<Vector2> _positions = new List<Vector2>();
+    [Header("»„ÓÍË")]
+    [SerializeField] private PlayerNumber _playerNumber;
+    [Header("ÀËÒÚ˚ ıÓ‰Ó‚")]
+    [SerializeField] private List<Vector2> _positionsTic = new List<Vector2>();
+    [SerializeField] private List<Vector2> _positionsTac = new List<Vector2>();
+    public PlayerNumber PlayerNumber { get { return _playerNumber; } private set { _playerNumber = value; } }
 
     private void Awake()
     {
@@ -19,29 +23,82 @@ public class GameController : MonoBehaviour
 
     public void SetPosition(Vector2 vector2)
     {
-        int count = 0;
-        _positions.Add(vector2);
-        if (_positions.Count < 3) return;
-
-        for (int i = 0; i < _controller.Varibls.Count; i++)
+        PlayerNumber = PlayerNumber switch
         {
-            count = 0;
-            for (int j = 0; j < _positions.Count; j++)
-            {
-                var result = _controller.Varibls[i].vector2s.Contains(_positions[j]);
-                if (result) ++count;
+            PlayerNumber.OnePlayer => PlayerNumber.ThwoPlayer,
+            PlayerNumber.ThwoPlayer => PlayerNumber.OnePlayer,
+            _ => PlayerNumber.OnePlayer
+        };
 
-                if (count == 3)
-                {
-                    Winner();
-                    return;
-                }
-                else continue;
-            }
+        if(PlayerNumber == PlayerNumber.OnePlayer)
+        {
+            _positionsTic.Add(vector2);
+            —hecksPOsitionPlayer(PlayerNumber.OnePlayer);
+        }
+        else
+        {
+            _positionsTac.Add(vector2);
+            —hecksPOsitionPlayer(PlayerNumber.ThwoPlayer);
         }
     }
-    private void Winner()
+    public void —hecksPOsitionPlayer(PlayerNumber playerNumber)
     {
-        Debug.Log(" ÚÓ-ÚÓ ÔÓ·Â‰ËÎ");
+        int count = 0;
+        switch (playerNumber)
+        {
+            case PlayerNumber.OnePlayer:
+            if (_positionsTic.Count < 3) return;
+
+                for (int i = 0; i < _controller.Varibls.Count; i++)
+                {
+                    count = 0;
+                    for (int j = 0; j < _positionsTic.Count; j++)
+                    {
+                        var result = _controller.Varibls[i].vector2s.Contains(_positionsTic[j]);
+                        if (result) ++count;
+
+                        if (count == 3)
+                        {
+                            Winner(PlayerNumber.OnePlayer);
+                            return;
+                        }
+                        else continue;
+                    }
+                }
+                break;
+            case PlayerNumber.ThwoPlayer:
+                if (_positionsTac.Count < 3) return;
+
+                for (int i = 0; i < _controller.Varibls.Count; i++)
+                {
+                    count = 0;
+                    for (int j = 0; j < _positionsTac.Count; j++)
+                    {
+                        var result = _controller.Varibls[i].vector2s.Contains(_positionsTac[j]);
+                        if (result) ++count;
+
+                        if (count == 3)
+                        {
+                            Winner(PlayerNumber.ThwoPlayer);
+                            return;
+                        }
+                        else continue;
+                    }
+                }
+                break;
+        }
+ 
+    }
+    public void Winner(PlayerNumber playerNumber)
+    {
+        switch (playerNumber)
+        {
+            case PlayerNumber.OnePlayer:
+                Debug.Log("œÓ·Â‰ËÎ ÔÂ‚˚È Ë„ÓÍ");
+                break;
+            case PlayerNumber.ThwoPlayer:
+                Debug.Log("œÓ·Â‰ËÎ ‚ÚÓÓÈ Ë„ÓÍ");
+                break;
+        }
     }
 }

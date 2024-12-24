@@ -160,7 +160,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _position: {x: 0, y: 0}
   _isFree: 1
-  _image: {fileID: 0}
+  _image: {fileID: 2590651018870638487}
+  _Tic: {fileID: 215203039, guid: 65f42d95939e72844b7cdb2be0e71a5a, type: 3}
+  _Tac: {fileID: -304306180, guid: 65f42d95939e72844b7cdb2be0e71a5a, type: 3}
 --- !u!1 &6833752013322102403
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,10 +195,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4840983069167338176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6788936637060450333
 CanvasRenderer:
