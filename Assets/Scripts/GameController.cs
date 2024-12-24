@@ -1,5 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Cysharp.Threading.Tasks;
+using TMPro;
+using System;
 
 public class GameController : MonoBehaviour
 {
@@ -7,6 +11,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private VariblController _controller;
     [Header("Игроки")]
     [SerializeField] private PlayerNumber _playerNumber;
+    private static int _playerOneWin;
+    private static int _playerThoWin;
+    [SerializeField] private TMP_Text _text;
     [Header("Листы ходов")]
     [SerializeField] private List<Vector2> _positionsTic = new List<Vector2>();
     [SerializeField] private List<Vector2> _positionsTac = new List<Vector2>();
@@ -19,6 +26,11 @@ public class GameController : MonoBehaviour
             instance = this;
         }
          else Destroy(instance.gameObject);
+    }
+
+    private void Start()
+    {
+        UpdateText();
     }
 
     public void SetPosition(Vector2 vector2)
@@ -87,18 +99,36 @@ public class GameController : MonoBehaviour
                 }
                 break;
         }
+        if(_positionsTac.Count + _positionsTic.Count == 9)
+        {
+            RestartGame();
+        }
  
     }
-    public void Winner(PlayerNumber playerNumber)
+    public async void Winner(PlayerNumber playerNumber)
     {
         switch (playerNumber)
         {
             case PlayerNumber.OnePlayer:
                 Debug.Log("Победил первый игрок");
+                _playerOneWin++;
                 break;
             case PlayerNumber.ThwoPlayer:
                 Debug.Log("Победил второй игрок");
+                _playerThoWin++;
                 break;
         }
+        UpdateText();
+        await UniTask.Delay(TimeSpan.FromSeconds(2));
+        RestartGame();
+    }
+
+    public async void RestartGame()
+    {
+        await SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex).ToUniTask();
+    }
+    public void UpdateText()
+    {
+        _text.text = $"Первый игрок: {_playerOneWin}\nВторой игрок:{_playerThoWin}";
     }
 }
